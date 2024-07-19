@@ -49,8 +49,9 @@ client = Client('localhost')
 client.execute('CREATE DATABASE IF NOT EXISTS steam') 
  
 # Создание таблицы 
-client.execute(''' 
-CREATE TABLE IF NOT EXISTS steam.books1 (  
+client.execute(''' DROP TABLE IF EXISTS steam.books1 ''')
+client.execute('''CREATE TABLE steam.books1 (  
+    id INT(32),
     Title String, 
     Price Float32, 
     Rating String
@@ -65,11 +66,12 @@ with open('Parsing_0720204/Seminar_3/books_data.json', 'r') as file:
     data = json.load(file) 
  
 # Вставка данных о книгах
+i1=1
 for item in data:
     title = item.get('Title', '')
     price = item.get('Price', 0.0)
     rating = item.get('Rating', '')
-    
-client.execute("INSERT INTO steam.books1 (Title, Price, Rating) VALUES (%s, %s, %s)", (title, price, rating))
+    client.execute('INSERT INTO steam.books1 (id, Title, Price, Rating) VALUES',[(i1,title,price,rating)])
+    i1=i1+1
 
 print("Данные успешно вставлены в таблицу 'books1'.")
